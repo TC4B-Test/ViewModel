@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">TesteViewModel</string>
+    <string name="tabs_listview">Tabs ListView</string>
+    <string name="title_activity_tabs">TabsActivity</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="Escolher_num_tabs">Escolher o numero de Tabs da Activity seguinte</string>
+    <string name="tabs_recycle_view">Tabs Recycle View</string>
+    <string name="todo">TODO</string>
+</resources>

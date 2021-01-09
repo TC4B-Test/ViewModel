@@ -29,8 +29,8 @@ public class WrvTabsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        int nTabs = intent.getExtras().getInt(ARG1);
-        tabPosition = nTabs>0 ? 0 : -1;
+        int nTabs = 10;
+        tabPosition = 0;
 
         setContentView(R.layout.activity_tabs_viewpager2);
         WrvPagerTabsAdapter sectionsPagerAdapter = new WrvPagerTabsAdapter(this,  nTabs);
@@ -93,8 +93,6 @@ public class WrvTabsActivity extends AppCompatActivity {
                     listaDados.add(new ItemLista(1000,"NOME", "GRUPO"));
                 }
                 viewPager.getAdapter().notifyItemChanged(tabPosition);
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
             }
         });
 

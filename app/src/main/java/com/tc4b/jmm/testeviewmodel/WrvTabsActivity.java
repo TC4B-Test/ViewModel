@@ -21,14 +21,15 @@ import com.tc4b.jmm.testeviewmodel.ui.main.WrvPagerTabsAdapter;
 import java.util.List;
 
 public class WrvTabsActivity extends AppCompatActivity {
+    private static final String TAG = "WrvTabsActivity";
 
-    public static final String ARG1 = "Tabs";
     private int tabPosition = -1;
+    static int cont = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent = getIntent();
+//        Intent intent = getIntent();
         int nTabs = 10;
         tabPosition = 0;
 
@@ -45,6 +46,8 @@ public class WrvTabsActivity extends AppCompatActivity {
             tab.setText("Tab: "+(position+1));
         });
         tabLayoutMediator.attach();
+
+
 
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
             /**
@@ -80,7 +83,6 @@ public class WrvTabsActivity extends AppCompatActivity {
             }
         });
 
-        WrvPageViewModel pageViewModel = new ViewModelProvider(WrvTabsActivity.this).get(WrvPageViewModel.class);
 
         //        tabs.setupWithViewPager(viewPager);
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -89,8 +91,9 @@ public class WrvTabsActivity extends AppCompatActivity {
             public void onClick(View view) {
 //                sectionsPagerAdapter.addListItem();
                 if(tabPosition>=0){
+                    WrvPageViewModel pageViewModel = new ViewModelProvider(WrvTabsActivity.this).get(WrvPageViewModel.class);
                     List<ItemLista>  listaDados = pageViewModel.getList(tabPosition);
-                    listaDados.add(new ItemLista(1000,"NOME", "GRUPO"));
+                    listaDados.add(new ItemLista(++cont,"NOME " + cont, "GRUPO " + cont));
                 }
                 viewPager.getAdapter().notifyItemChanged(tabPosition);
             }

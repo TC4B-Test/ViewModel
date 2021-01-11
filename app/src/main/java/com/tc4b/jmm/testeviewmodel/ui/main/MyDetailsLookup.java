@@ -28,15 +28,15 @@ class MyDetailsLookup extends ItemDetailsLookup<ItemLista> {
             Log.d(TAG+":getItemDetails", "MotionEvent: ACTION_DOWN");
         }else
         if(e.getAction() == MotionEvent.ACTION_UP){
-            Log.e(TAG+":getItemDetails", "MotionEvent: ACTION_UP");
+            Log.d(TAG+":getItemDetails", "MotionEvent: ACTION_UP");
         }else
         if(e.getAction() == MotionEvent.ACTION_CANCEL){
-            Log.e(TAG+":getItemDetails", "MotionEvent: ACTION_CANCEL");
+            Log.d(TAG+":getItemDetails", "MotionEvent: ACTION_CANCEL");
         }else
         if(e.getAction() == MotionEvent.ACTION_OUTSIDE){
-            Log.e(TAG+":getItemDetails", "MotionEvent: ACTION_OUTSIDE");
+            Log.d(TAG+":getItemDetails", "MotionEvent: ACTION_OUTSIDE");
         }else {
-            Log.e(TAG + ":getItemDetails", "MotionEvent: " + e.getAction());
+            Log.d(TAG + ":getItemDetails", "MotionEvent: " + e.getAction());
         }
 
         View view = recycleView.findChildViewUnder(e.getX(), e.getY());

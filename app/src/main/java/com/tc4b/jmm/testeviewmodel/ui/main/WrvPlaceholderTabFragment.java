@@ -1,6 +1,7 @@
 package com.tc4b.jmm.testeviewmodel.ui.main;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.selection.ItemDetailsLookup;
@@ -36,6 +38,8 @@ import com.tc4b.jmm.testeviewmodel.ui.main.ItemLista.ListOfItemList;
 import java.util.ArrayList;
 import java.util.List;
 
+import static androidx.core.util.Preconditions.checkNotNull;
+
 
 /**
  * A placeholder fragment containing a simple view.
@@ -45,7 +49,7 @@ public class WrvPlaceholderTabFragment extends Fragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String ARG_ORDENCRIACAO = "ordenCriacaoNewInstance";
-    private static final int MAX_NUM_ITEMS = 50;
+    private static final int MAX_NUM_ITEMS = 20;
     private static int ordenCriacaoNewInstance = 0;
 
     private WrvPageViewModel pageViewModel;
@@ -63,7 +67,7 @@ public class WrvPlaceholderTabFragment extends Fragment {
         WrvPlaceholderTabFragment fragment = new WrvPlaceholderTabFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(ARG_SECTION_NUMBER, index);
-        bundle.putInt(ARG_ORDENCRIACAO, ++ordenCriacaoNewInstance);
+        bundle.putInt(ARG_ORDENCRIACAO, ordenCriacaoNewInstance++);
 
         fragment.setArguments(bundle);
         return fragment;
@@ -85,77 +89,64 @@ public class WrvPlaceholderTabFragment extends Fragment {
                 List<ItemLista> aLista = new ArrayList<>();
                 int nLinhas = (int) (Math.random() * MAX_NUM_ITEMS);
                 for (int i = 0; i < nLinhas; i++) {
-                    aLista.add(new ItemLista(ordenCriaco * MAX_NUM_ITEMS + i + 1,  // para ter um valor superior a 0 (zero)
-                            "nome: " + i + " : ord.Criação: " + ordenCriaco, "Grupo: " + index));
+                    aLista.add(new ItemLista(ordenCriaco * MAX_NUM_ITEMS + i + 1,
+                            "Nome: " + i + " : n. Ordem: " + ordenCriaco, "Grupo: " + index));
                 }
 
                 return aLista;
             }
         });
-//        if(listaDados==null) {                          // 2021 01 04 també não tinha este if ....  ^^^^
-//            listaDados = new ArrayList<>();
-//            int nLinhas = (int) (Math.random() * MAX_NUM_ITEMS);
-//            for (int i = 0; i < nLinhas; i++) {
-//                listaDados.add(new ItemLista(ordenCriaco * MAX_NUM_ITEMS + i + 1,  // para ter um valor superior a 0 (zero)
-//                        "nome: " + i + " : ord.Criação: " + ordenCriaco, "Grupo: " + index));
-//            }
-//        }
-//        pageViewModel.setIndex(index, listaDados);
-//        pageViewModel.getList().observe(this,listaDados -> {
-//
-//            Log.e(TAG, "onCreate: listaDados.size(): "+ (listaDados== null ? "null": (""+listaDados.size())) );
-//                }
-//        );
     }
+
+    static boolean bObserve = true;
 
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-
         View root = inflater.inflate(R.layout.fragment_tabs_recicleview, container, false);
         final TextView textView = root.findViewById(R.id.section_label);
-        textView.setText("Numero de Tabs: " + (getArguments().getInt(ARG_SECTION_NUMBER) + 1));
+        textView.setText("N. Tabs: " + (getArguments().getInt(ARG_SECTION_NUMBER) + 1));
         recycleView = root.findViewById(R.id.recycleview_in_tab);
         recycleView.setLayoutManager(new GridLayoutManager(getContext(), 1));
         registerForContextMenu(recycleView);
 
-        listaDados = pageViewModel.getList(index);// 2021 01 04 ............................
+        listaDados = pageViewModel.getList(index);
         wrvListdapter = new WrvListdapter(listaDados);
         recycleView.setAdapter(wrvListdapter);
 
         SelectionTracker<ItemLista> tracker = new SelectionTracker.Builder<>(
                 "my-selection-id",
                 recycleView,
-                new MyDetailsKeyProvider(1, listaDados),  // isto é : 'StableIdKeyProvider extends ItemKeyProvider<Long>'
+                new MyDetailsKeyProvider(1, listaDados),  // 'StableIdKeyProvider extends ItemKeyProvider<Long>'
                 new MyDetailsLookup(recycleView),
                 StorageStrategy.createParcelableStorage(ItemLista.class))
-                .withOnItemActivatedListener(new OnItemActivatedListener<ItemLista>() {
+                    .withOnItemActivatedListener(new OnItemActivatedListener<ItemLista>() {
                     @Override
                     public boolean onItemActivated(@NonNull ItemDetailsLookup.ItemDetails<ItemLista> item, @NonNull MotionEvent e) {
                         Log.e("onItemActivated", "Selected ItemId: " + item.toString() + " MotionEvent: " + e);
                         return true;
                     }
                 })
-                .withOnDragInitiatedListener(new OnDragInitiatedListener() {
+                    .withOnDragInitiatedListener(new OnDragInitiatedListener() {
                     @Override
                     public boolean onDragInitiated(@NonNull MotionEvent e) {
                         Log.e("onDragInitiated", e.toString());
                         return true;
                     }
                 })
-                .withOnContextClickListener(new OnContextClickListener() {
+                    .withOnContextClickListener(new OnContextClickListener() {
                     @Override
                     public boolean onContextClick(@NonNull MotionEvent e) {
                         Log.e(TAG, "onContextClick: MotionEvent:" + e);
                         return false;
                     }
                 })
-                .withSelectionPredicate(new SelectionTracker.SelectionPredicate<ItemLista>() {
+                    .withSelectionPredicate(new SelectionTracker.SelectionPredicate<ItemLista>() {
                                             @Override
                                             public boolean canSetStateForKey(@NonNull ItemLista key, boolean nextState) {
                                                 selectedItem = key;
-                                                Log.e(TAG, "canSetStateForKey: $nextState:" + nextState);
+                                                Log.e(TAG, "canSetStateForKey: "+key.toString()+"$nextState:" + nextState);
                                                 return true;
                                             }
 
@@ -168,36 +159,30 @@ public class WrvPlaceholderTabFragment extends Fragment {
                                             @Override
                                             public boolean canSelectMultiple() {
                                                 Log.e(TAG, "canSelectMultiple: ");
-                                                return false;
+                                                return true;
                                             }
-                                        }
-                )
-                .build();
-//        wrvListdapter.setSelectionTracker(tracker);
-
-        pageViewModel.getList().observe(getActivity(), new Observer<List<ListOfItemList>>() {
-            /**
-             * Called when the data is changed.
-             *
-             * @param listaItems The new data
-             */
-            @Override
-            public void onChanged(List<ListOfItemList> listaItems) {
-//                ArrayAdapter<String> adLista = new ArrayAdapter<String>(getContext(), android.R.layout.simple_expandable_list_item_2, listaItems);
-//                wrvListdapter = new WrvListdapter(listaItems);
-                for (ListOfItemList listOfItemList : listaItems) {
-                    if (listOfItemList.index == index) {
-                        wrvListdapter.setListaItems(listOfItemList.listaList);
+                                        })
+                    .build();
+        wrvListdapter.setSelectionTracker(tracker);
+        if(bObserve && getActivity()!=null) {
+//            bObserve=false;
+            pageViewModel.getList().observe(getActivity(), new Observer<List<ListOfItemList>>() {
+                /**
+                 * Called when the data is changed.
+                 *
+                 * @param listOfItemsList The new data
+                 */
+                @Override
+                public void onChanged(List<ListOfItemList> listOfItemsList) {
+                    for (ListOfItemList listOfItemList : listOfItemsList) {
+                        if (listOfItemList.index == index) {
+                            wrvListdapter.setListaItems(listOfItemList.listaList);
+                        }
                     }
                 }
-//                if(listaItems!=null && listaDados!= null && listaItems.size()!=listaDados.size()){
-//                    Log.e(TAG, "onChanged: "+listaItems.size() + "/" + listaDados.size());
-//                }
-//                wrvListdapter.setSelectionTracker(tracker);
-//                recycleView.setAdapter(wrvListdapter);
-            }
 
-        });
+            });
+        }
         return root;
     }
 

@@ -165,7 +165,6 @@ public class WrvPlaceholderTabFragment extends Fragment {
                     .build();
         wrvListdapter.setSelectionTracker(tracker);
         if(bObserve && getActivity()!=null) {
-            // para garantir que entra aqui sempre
 //            bObserve=false;
             pageViewModel.getList().observe(getActivity(), new Observer<List<ListOfItemList>>() {
                 /**
